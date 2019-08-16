@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class GamePayLoad {
     private String id;
-    private String firstPlayer;
+    private Character firstPlayer;
 }

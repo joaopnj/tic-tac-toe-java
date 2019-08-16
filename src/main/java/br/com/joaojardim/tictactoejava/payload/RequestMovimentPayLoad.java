@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class RequestMovimentPayLoad {
-    private String player;
+    private Character player;
     private PositionPayload position;
 }

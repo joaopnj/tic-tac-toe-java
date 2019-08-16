@@ -2,6 +2,8 @@ package br.com.joaojardim.tictactoejava.model;
 
 
 import br.com.joaojardim.tictactoejava.payload.PositionPayload;
+import br.com.joaojardim.tictactoejava.payload.RequestMovimentPayLoad;
+import lombok.Data;
 import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,18 +11,18 @@ import javax.persistence.Id;
 import java.util.List;
 
 @Document(collection = "game")
-@Getter
+@Data
 public class Game {
 
     @Id
     private String id;
-    private String winner;
-    private String turn;
-    private List<PositionPayload> positionPayloadList;
+    private Character winner;
+    private Character turn;
+    private Character[][] table;
 
-    public Game(String winner, String turn, List<PositionPayload> positionPayloadList) {
+    public Game(Character winner, Character turn, Character[][] table) {
         this.winner = winner;
         this.turn = turn;
-        this.positionPayloadList = positionPayloadList;
+        this.table = table;
     }
 }
