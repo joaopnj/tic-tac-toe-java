@@ -10,11 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/game")
@@ -50,24 +47,31 @@ public class GameController {
             return ResponseEntity.badRequest().body(movimentPayload);
         }
 
-//        if (this.verifyPosition(game.get().getRequestMovimentPayLoadList(), requestMovimentPayLoad.getPosition())) {
-//            movimentPayload.setMsg("Posição já escolhida");
-//            return ResponseEntity.badRequest().body(movimentPayload);
-//        }
-
         game.get().getTable()[requestMovimentPayLoad.getPosition().getX()][requestMovimentPayLoad.getPosition().getY()] = requestMovimentPayLoad.getPlayer();
         Game newGame = gameRepository.save(game.get());
         movimentPayload.setMsg("Movimento efetuado sucesso!");
 
-        Character winner = this.verifyWinner(newGame);
+        if (isMatrixFill(newGame.getTable())) {
+            Character winner = this.verifyWinner(newGame);
 
-        if (null != winner || ' ' != winner) {
-            movimentPayload.setMsg("Partida finalizada");
-            movimentPayload.setWinner(winner);
-            return ResponseEntity.ok(movimentPayload);
+            if (null != winner || ' ' != winner) {
+                movimentPayload.setMsg("Partida finalizada");
+                movimentPayload.setWinner(winner);
+                return ResponseEntity.ok(movimentPayload);
+            }
         }
 
         return ResponseEntity.ok(movimentPayload);
+    }
+
+    private Boolean isMatrixFill(Character[][] matrix) {
+        Boolean theReturn = false;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                theReturn = matrix[i][j] != null;
+            }
+        }
+        return theReturn;
     }
 
     private char choosePlayer() {
@@ -155,7 +159,7 @@ public class GameController {
             return 'O';
         }
 
-        return ' ';
+        return 'D';
     }
 
 
