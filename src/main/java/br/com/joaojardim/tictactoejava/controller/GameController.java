@@ -47,10 +47,14 @@ public class GameController {
             return ResponseEntity.badRequest().body(movimentPayload);
         }
 
+        if(isPositionFill(game.get().getTable(), requestMovimentPayLoad.getPosition().getX(), requestMovimentPayLoad.getPosition().getY())) {
+            movimentPayload.setMsg("Posição escolhida! ");
+            return ResponseEntity.badRequest().body(movimentPayload);
+        }
+
         game.get().getTable()[requestMovimentPayLoad.getPosition().getX()][requestMovimentPayLoad.getPosition().getY()] = requestMovimentPayLoad.getPlayer();
         Game newGame = gameRepository.save(game.get());
         movimentPayload.setMsg("Movimento efetuado sucesso!");
-
 
         Character winner = this.verifyWinner(newGame);
 
@@ -71,6 +75,10 @@ public class GameController {
             }
         }
         return theReturn;
+    }
+
+    private Boolean isPositionFill(Character[][] matrix, Character x, Character y) {
+        return matrix[x][y] != null || matrix[x][y] != ' ';
     }
 
     private char choosePlayer() {
@@ -159,6 +167,7 @@ public class GameController {
         }
 
         if (isMatrixFill(game.getTable())) {
+            System.out.println("EMPATE");
             return 'D';
         }
 
