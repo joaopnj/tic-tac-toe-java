@@ -51,14 +51,13 @@ public class GameController {
         Game newGame = gameRepository.save(game.get());
         movimentPayload.setMsg("Movimento efetuado sucesso!");
 
-        if (isMatrixFill(newGame.getTable())) {
-            Character winner = this.verifyWinner(newGame);
 
-            if (null != winner || ' ' != winner) {
-                movimentPayload.setMsg("Partida finalizada");
-                movimentPayload.setWinner(winner);
-                return ResponseEntity.ok(movimentPayload);
-            }
+        Character winner = this.verifyWinner(newGame);
+
+        if (null != winner || ' ' != winner) {
+            movimentPayload.setMsg("Partida finalizada");
+            movimentPayload.setWinner(winner);
+            return ResponseEntity.ok(movimentPayload);
         }
 
         return ResponseEntity.ok(movimentPayload);
@@ -159,7 +158,11 @@ public class GameController {
             return 'O';
         }
 
-        return 'D';
+        if (isMatrixFill(game.getTable())) {
+            return 'D';
+        }
+
+        return ' ';
     }
 
 
