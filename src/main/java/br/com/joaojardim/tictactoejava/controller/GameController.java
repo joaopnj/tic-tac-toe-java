@@ -4,6 +4,7 @@ import br.com.joaojardim.tictactoejava.model.Game;
 import br.com.joaojardim.tictactoejava.payload.GamePayLoad;
 import br.com.joaojardim.tictactoejava.payload.MovimentPayload;
 import br.com.joaojardim.tictactoejava.payload.PositionPayload;
+import br.com.joaojardim.tictactoejava.payload.RequestMovimentPayLoad;
 import br.com.joaojardim.tictactoejava.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,19 +34,21 @@ public class GameController {
         return ResponseEntity.ok(gamePayLoad);
     }
 
-    @PostMapping(value= "/{id}/moviment", params = {"player", "positionPayload"})
-    public ResponseEntity<?> moviment(@PathVariable String id, @RequestParam String player, @RequestParam PositionPayload positionPayload) {
+    @PostMapping(value= "/{id}/moviment")
+    public ResponseEntity<?> moviment(@PathVariable String id, @RequestBody RequestMovimentPayLoad requestMovimentPayLoad) {
         MovimentPayload movimentPayload = new MovimentPayload();
         Optional<Game> game = this.gameRepository.findById(id);
-        if(!game.isPresent()) {
+        if (!game.isPresent()) {
             movimentPayload.setMsg("Partida não encontrada");
             return ResponseEntity.badRequest().body(movimentPayload);
         }
 
-        if(null != player && game.get().getTurn() != player) {
+        if (null != requestMovimentPayLoad.getPlayer() && game.get().getTurn() != requestMovimentPayLoad.getPlayer()) {
             movimentPayload.setMsg("Não é turno do jogador");
             return ResponseEntity.badRequest().body(movimentPayload);
         }
+
+
         return ResponseEntity.ok(null);
     }
 
