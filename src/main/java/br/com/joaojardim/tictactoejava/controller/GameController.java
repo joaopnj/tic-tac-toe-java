@@ -68,10 +68,12 @@ public class GameController {
     }
 
     private Boolean isMatrixFill(Character[][] matrix) {
-        Boolean theReturn = false;
+        Boolean theReturn = true;
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix.length; j++) {
-                theReturn = matrix[i][j] != null;
+                if (matrix[i][j] == null) {
+                    theReturn = false;
+                }
             }
         }
         return theReturn;
